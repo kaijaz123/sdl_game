@@ -1,0 +1,20 @@
+Notes about camera, spirit, and map movement
+
+Camara and spirit are actually moving together its just we need to make sure
+the spirit is not moving out of frame so we need to stick it in a fixed position hence we minus the
+position of camera (implementation refers to the code)
+
+So when the player moves, the map moves in the opposite direction
+Lets say player move right hence position_x increases, then we decrease the position_x of map rendering position
+so it creates the motion of map moving
+
+//Frame rate explanation
+
+frameDelay = 1000/60 *1000 is required because sdl process time in miliseconds (1000)
+frameStart = SDL_GetTicks(); -> calculate current time
+All process takes in place
+frameTime = SDL_GetTicks() - frameStart; -> calculate the elapsed time starting from the frameStart
+if (frameDelay > frameTime)  -> So if the elapsed time is faster than expected then we delay the scene until the 60FPS is reached
+{
+    SDL_Delay(frameDelay - frameTime);
+}
