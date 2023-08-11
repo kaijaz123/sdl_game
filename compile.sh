@@ -3,6 +3,6 @@
 make clean
 rm -rf bin*
 rm -rf Makefile game.make
-premake5 gmake2
+./premake5.exe gmake2
 make
-./bin/arm64/game
+./bin/x86_64/game

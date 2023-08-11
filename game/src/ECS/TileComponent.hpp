@@ -2,7 +2,7 @@
 
 #include "ECS.hpp"
 #include "../Game.hpp"
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include "../TextureManager.hpp"
 
 class TileComponent : public Component
@@ -16,12 +16,12 @@ public:
     ~TileComponent() {};
 
     TileComponent(SDL_Texture* texture, int texPos_x, int texPos_y, int pos_x, int pos_y, 
-                  int tileWidth, int tileHeight, int scale)
+                  int tileWidth, int tileHeight, int scale, bool tex8)
     {
         tex = texture;
 
-        src.x = texPos_x * tileWidth;
-        src.y = texPos_y * tileHeight;
+        src.x = texPos_x * tex8_Process(tex8, tileWidth);
+        src.y = texPos_y * tex8_Process(tex8, tileHeight);
         src.w = tileWidth;
         src.h = tileHeight;
 
@@ -30,6 +30,14 @@ public:
 
         position_x = pos_x * (tileWidth * scale);
         position_y = pos_y * (tileHeight * scale);
+    }
+
+    int tex8_Process(bool tex8, int tileSize)
+    {
+        if (tex8)
+        { return tileSize/2; }
+
+        return tileSize;
     }
 
     void draw() override

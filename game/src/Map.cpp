@@ -1,62 +1,109 @@
 #include "Map.hpp"
+#include "Game.hpp"
 #include "TextureManager.hpp"
 #include "ECS/ECS.hpp"
 #include "ECS/TileComponent.hpp"
-#include "Game.hpp"
+#include "ECS/ColliderComponent.hpp"
+
 extern Manager manager;
+int Map::mapPosEdgeX = 0;
+int Map::mapPosEdgeY = 0;
 
 Map::Map(int mS) : mapScale(mS)
 {
     grass = TextureManager::LoadTexture("game/assets/Tilesets/ground_tiles/Old_tiles/Grass.png");
     water = TextureManager::LoadTexture("game/assets/Tilesets/ground_tiles/Water.png");
+    house = TextureManager::LoadTexture("game/assets/Tilesets/building_parts/WoodenHouse.png");
+    door = TextureManager::LoadTexture("game/assets/Tilesets/building_parts/Door.png");
+    tree = TextureManager::LoadTexture("game/assets/Objects/Tree/tree_sprites.png");
+
+    // Load Layer 0 -> All Water
+    for (int y=0; y<mapSizeY; y++)
+    {
+        for (int x=0; x<mapSizeX; x++)
+        {
+            addTile(water, 0, 0, x, y, 64, 16);
+            // Store the position of the edge of map
+            if (x == mapSizeX-1)
+                { mapPosEdgeX = 64 * mapScale * (x+1); }
+            
+            if ( y == mapSizeY-1)
+                { mapPosEdgeY = 16 * mapScale * (y+1); }
+        }
+    }
 }
 
 Map::~Map()
 {}
 
+Map::RenderStructure Map::extractInfo(std::fstream& file)
+{
+    Map::RenderStructure tileInfo;
+    char tileType, c;
+    int texPos_x, texPos_y;
+
+    file.get(tileType);
+    tileInfo.tileType = tileType;
+
+    file.get(c);
+    texPos_x = atoi(&c);
+    tileInfo.texPos_x = texPos_x;
+
+    file.get(c);
+    texPos_y = atoi(&c);
+    tileInfo.texPos_y = texPos_y;
+
+    return tileInfo;
+}
+
+void Map::checkTile(Map::RenderStructure tileSet, int x, int y)
+{
+    switch (tileSet.tileType)
+    {
+        case 'S':
+            break;
+
+        case 'G':
+            addTile(grass, tileSet.texPos_x, tileSet.texPos_y, x, y, 16, 16);
+            break;
+        
+        case 'D':
+            addTile(door, tileSet.texPos_x, tileSet.texPos_y, x, y, 16, 16);
+            break;
+        
+        case 'H':
+            addTile(house, tileSet.texPos_x, tileSet.texPos_y, x, y, 16, 16, true);
+            break;
+
+        case 'T':
+            addTile(tree, tileSet.texPos_x, tileSet.texPos_y, x, y, 16, 16, true, true);
+            break;
+        
+        default:
+            break;
+    }
+}
+
 void Map::DrawMap(const char* fileMap)
 {
-    char c, tileType;
-    int texPos_x, texPos_y;
+    Map::RenderStructure tileSet;
+    Map::RenderStructure objectSet;
 
     std::fstream mapFile;
     mapFile.open(fileMap);
 
-    // Load Layer 0 -> All Water
-    for (int i=0; i<mapSizeY; i++)
+    for (int y=0; y<mapSizeY; y++)
     {
-        for (int j=0; j<mapSizeX; j++)
+        for (int x=0; x<mapSizeX; x++)
         {
-            addTile(water, 0, 0, j, i, 64, 16);       
-        }
-    }
-
-    // Load Layer 1 -> All submap
-    for (int i=0; i<mapSizeY; i++)
-    {
-        for (int j=0; j<mapSizeX; j++)
-        {
-            mapFile.get(tileType);
-            mapFile.get(c);
-            texPos_x = atoi(&c);;
-            mapFile.get(c);
-            texPos_y = atoi(&c);
-
-            switch (tileType)
+            while (true)
             {
-                case 'S':
-                    break;
-
-                case 'G':
-                    addTile(grass, texPos_x, texPos_y, j, i, 16, 16);
-                    break;
-
-                case 'A':
-                    addTile(water, texPos_x, texPos_y, j, i, 64, 16);
-                    break;
-                
-                default:
-                    break;
+                tileSet = extractInfo(mapFile);
+                checkTile(tileSet, x, y);
+                    
+                char nextChar = mapFile.peek();
+                if (!std::isalpha(nextChar))
+                    { break; }
             }
             mapFile.ignore();
         }
@@ -64,9 +111,23 @@ void Map::DrawMap(const char* fileMap)
     mapFile.close();
 }
 
-void Map::addTile(SDL_Texture* tex, int texPos_x, int texPos_y, int pos_x, int pos_y, int tileWidth, int tileHeight)
+void Map::addTile(SDL_Texture* tex, int texPos_x, int texPos_y, int pos_x, int pos_y, int tileWidth, 
+                  int tileHeight, bool tex8, bool obj)
 {
-    auto& tile(manager.addEntity());
-    tile.addComponent<TileComponent>(tex, texPos_x, texPos_y, pos_x, pos_y, tileWidth, tileHeight, mapScale);
-    tile.addGroup(Game::groupMap);
+    if (!obj)
+    {
+        auto& ground(manager.addEntity());
+        ground.addComponent<TileComponent>(tex, texPos_x, texPos_y, pos_x, pos_y, tileWidth, tileHeight, 
+                                        mapScale, tex8);
+        ground.addGroup(Game::groupMap);
+    }
+
+    else
+    {
+        auto& object(manager.addEntity());
+        object.addComponent<TileComponent>(tex, texPos_x, texPos_y, pos_x, pos_y, tileWidth, tileHeight, 
+                                        mapScale, tex8);
+        object.addComponent<ColliderComponent>(tileWidth, tileHeight);
+        object.addGroup(Game::groupMap);
+    }
 }

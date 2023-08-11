@@ -18,43 +18,41 @@ endif
 # Configurations
 # #############################################
 
-ifeq ($(origin CC), default)
-  CC = clang
-endif
-ifeq ($(origin CXX), default)
-  CXX = clang++
-endif
-ifeq ($(origin AR), default)
-  AR = ar
-endif
-TARGETDIR = bin/arm64
-TARGET = $(TARGETDIR)/game
+RESCOMP = windres
+TARGETDIR = bin/x86_64
+TARGET = $(TARGETDIR)/game.exe
 DEFINES +=
-INCLUDES += -Igame/vendor/spdlog/include -Igame/vendor/glfw/include -Igame/vendor/sdl2/include -Igame/vendor/sdl_image
+INCLUDES += -Igame/vendor/SDL2/x86_64-w64-mingw32/include -Igame/vendor/SDL2_image/x86_64-w64-mingw32/include
 FORCE_INCLUDE +=
 ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
 ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-LIBS += -framework SDL2 -framework SDL2_image -framework OpenGL -framework Cocoa -framework IOKit -framework CoreVideo -framework CoreFoundation
+LIBS += -lSDL2 -lSDL2_image
 LDDEPS +=
-ALL_LDFLAGS += $(LDFLAGS) -F /System/Library/Frameworks -F /Library/Frameworks
 LINKCMD = $(CXX) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
 define PREBUILDCMDS
 endef
 define PRELINKCMDS
 endef
 define POSTBUILDCMDS
+	@echo Running postbuild commands
+	cp 'game/vendor/SDL2/x86_64-w64-mingw32/bin/SDL2.dll' 'bin/x86_64/'
+	cp 'game/vendor/SDL2_image/x86_64-w64-mingw32/bin/SDL2_image.dll' 'bin/x86_64/'
 endef
 
 ifeq ($(config),debug)
-OBJDIR = bin-int/arm64/Debug
-ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -g
-ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -g -std=c++17
+OBJDIR = bin-int/x86_64/Debug
+ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -g
+ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -g -std=c++17
+ALL_LDFLAGS += $(LDFLAGS) -Lgame/vendor/SDL2/x86_64-w64-mingw32/lib -Lgame/vendor/SDL2_image/x86_64-w64-mingw32/lib -L/usr/lib64 -m64
 
 else ifeq ($(config),release)
-OBJDIR = bin-int/arm64/Release
-ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -O2
-ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -O2 -std=c++17
+OBJDIR = bin-int/x86_64/Release
+ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2
+ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -std=c++17
+ALL_LDFLAGS += $(LDFLAGS) -Lgame/vendor/SDL2/x86_64-w64-mingw32/lib -Lgame/vendor/SDL2_image/x86_64-w64-mingw32/lib -L/usr/lib64 -m64 -s
 
+else
+  $(error "invalid configuration $(config)")
 endif
 
 # Per File Configurations
@@ -64,14 +62,8 @@ endif
 # File sets
 # #############################################
 
-GENERATED :=
 OBJECTS :=
 
-GENERATED += $(OBJDIR)/ECS.o
-GENERATED += $(OBJDIR)/Game.o
-GENERATED += $(OBJDIR)/Map.o
-GENERATED += $(OBJDIR)/TextureManager.o
-GENERATED += $(OBJDIR)/main.o
 OBJECTS += $(OBJDIR)/ECS.o
 OBJECTS += $(OBJDIR)/Game.o
 OBJECTS += $(OBJDIR)/Map.o
@@ -84,7 +76,7 @@ OBJECTS += $(OBJDIR)/main.o
 all: $(TARGET)
 	@:
 
-$(TARGET): $(GENERATED) $(OBJECTS) $(LDDEPS) | $(TARGETDIR)
+$(TARGET): $(OBJECTS) $(LDDEPS) | $(TARGETDIR)
 	$(PRELINKCMDS)
 	@echo Linking game
 	$(SILENT) $(LINKCMD)
@@ -110,11 +102,9 @@ clean:
 	@echo Cleaning game
 ifeq (posix,$(SHELLTYPE))
 	$(SILENT) rm -f  $(TARGET)
-	$(SILENT) rm -rf $(GENERATED)
 	$(SILENT) rm -rf $(OBJDIR)
 else
 	$(SILENT) if exist $(subst /,\\,$(TARGET)) del $(subst /,\\,$(TARGET))
-	$(SILENT) if exist $(subst /,\\,$(GENERATED)) rmdir /s /q $(subst /,\\,$(GENERATED))
 	$(SILENT) if exist $(subst /,\\,$(OBJDIR)) rmdir /s /q $(subst /,\\,$(OBJDIR))
 endif
 

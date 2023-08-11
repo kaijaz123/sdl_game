@@ -3,7 +3,7 @@
 #include "ECS.hpp"
 #include "../TextureManager.hpp"
 #include "TransformComponent.hpp"
-#include "SDL.h"
+#include <SDL2/SDL.h>
 
 class SpriteComponent : public Component
 {

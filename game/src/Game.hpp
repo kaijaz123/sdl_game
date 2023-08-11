@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
-#include <SDL.h>
-#include <SDL_image.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 
 class Game
 {
@@ -23,7 +23,9 @@ public:
     enum GroupLabels : std::size_t
     {
         groupMap,
-        groupPlayer
+        groupGround,
+        groupObject,
+        groupPlayer,
     };
 
 private:
