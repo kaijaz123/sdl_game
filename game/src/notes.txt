@@ -18,3 +18,9 @@ if (frameDelay > frameTime)  -> So if the elapsed time is faster than expected t
 {
     SDL_Delay(frameDelay - frameTime);
 }
+
+Note about collision
+When doing the collision checking, we want the original projected position of object without the 
+affect of the camera. Because with camera involved, all the map is gonna be dynamic 
+means the character move all the object's position is changed accordingly hence we want it
+to be static and we only move our character.

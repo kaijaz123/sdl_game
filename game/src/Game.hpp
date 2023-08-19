@@ -23,8 +23,8 @@ public:
     enum GroupLabels : std::size_t
     {
         groupMap,
-        groupGround,
-        groupObject,
+        groupMapGround,
+        groupMapObject,
         groupPlayer,
     };
 

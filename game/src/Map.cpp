@@ -119,7 +119,7 @@ void Map::addTile(SDL_Texture* tex, int texPos_x, int texPos_y, int pos_x, int p
         auto& ground(manager.addEntity());
         ground.addComponent<TileComponent>(tex, texPos_x, texPos_y, pos_x, pos_y, tileWidth, tileHeight, 
                                         mapScale, tex8);
-        ground.addGroup(Game::groupMap);
+        ground.addGroup(Game::groupMapGround);
     }
 
     else
@@ -127,7 +127,8 @@ void Map::addTile(SDL_Texture* tex, int texPos_x, int texPos_y, int pos_x, int p
         auto& object(manager.addEntity());
         object.addComponent<TileComponent>(tex, texPos_x, texPos_y, pos_x, pos_y, tileWidth, tileHeight, 
                                         mapScale, tex8);
-        object.addComponent<ColliderComponent>(tileWidth, tileHeight);
-        object.addGroup(Game::groupMap);
+        object.addComponent<TransformComponent>();
+        object.addComponent<ColliderComponent>(true);
+        object.addGroup(Game::groupMapObject);
     }
 }

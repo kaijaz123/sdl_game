@@ -5,7 +5,7 @@
 #include "ECS/SpriteComponent.hpp"
 #include "ECS/TransformComponent.hpp"
 #include "ECS/InputController.hpp"
-// #include "ECS/ColliderComponent.hpp"
+#include "ECS/ColliderComponent.hpp"
 
 // Game initialization
 bool Game::isRunning = false;
@@ -14,7 +14,7 @@ SDL_Renderer* Game::renderer;
 SDL_Rect Game::camera = {0, 0, 800, 640};
 Manager manager;
 Map *map;
-// Collision collider;
+Collision collider;
 
 // ECS Implementation
 auto& player(manager.addEntity());
@@ -50,9 +50,9 @@ void Game::init(const char* title, int width, int height, bool fullscreen)
     map->DrawMap("game/assets/Map/layer2.map");
 
     // player.addComponent<TransformComponent>(0, 0, 400, 320, 48, 3, 1, -90, -70);
-    player.addComponent<TransformComponent>(0, 0, 800, 640, 48, 2, 3, 0, 0);
+    player.addComponent<TransformComponent>(1, 1, 800, 640, 16, 16, 3, 3);
     player.addComponent<SpriteComponent>("game/assets/Characters/CharSheet.png");
-    // player.addComponent<ColliderComponent>();
+    player.addComponent<ColliderComponent>(48, 48);
     player.addComponent<InputController>();
     player.addGroup(Game::groupPlayer);
 }
@@ -71,26 +71,32 @@ void Game::handleEvents()
 }
 
 auto& players(manager.getGroup(Game::groupPlayer));
-auto& tiles(manager.getGroup(Game::groupMap));
-// auto& objects(manager.getGroup(Game::groupObject));
-// auto& grounds(manager.getGroup(Game::groupGround));
+auto& grounds(manager.getGroup(Game::groupMapGround));
+auto& objects(manager.getGroup(Game::groupMapObject));
 
 void Game::update()
 {
+    SDL_Rect playerPol;
+    playerPol = player.getComponent<ColliderComponent>().collider;
+
     manager.refresh();
     manager.update();
 
+
+    for (auto object : objects)
+    {
+        if (collider.Collide(playerPol, 
+                             object->getComponent<ColliderComponent>().collider))
+        {
+            std::cout << "Hit!!" << std::endl;
+            player.getComponent<TransformComponent>().position_x = playerPol.x;
+            player.getComponent<TransformComponent>().position_y = playerPol.y;
+        }
+    }
+
+    
     camera.x = player.getComponent<TransformComponent>().position_x - 400;
     camera.y = player.getComponent<TransformComponent>().position_y - 320;
-
-    // for (auto objects)
-    // {
-    //     if (collider.Collide(player.getComponent<ColliderComponent>().collider, 
-    //                          object.getComponent<ColliderComponent>().collider))
-    //     {
-    //         std::cout << "Hit!!" << std::endl;
-    //     }
-    // }
 
     if (camera.x <= 0)
         { camera.x = 0; }
@@ -106,20 +112,20 @@ void Game::render()
 {
     SDL_RenderClear(renderer);
 
-    for (auto& t : tiles)
+    // for (auto& t : tiles)
+    // {
+    //     t->draw();
+    // }
+
+    for (auto& g : grounds)
     {
-        t->draw();
+        g->draw();
     }
 
-    // for (auto& g : grounds)
-    // {
-    //     g->draw();
-    // }
-
-    // for (auto& o : objects)
-    // {
-    //     o->draw();
-    // }
+    for (auto& o : objects)
+    {
+        o->draw();
+    }
 
     for (auto& p : players)
     {

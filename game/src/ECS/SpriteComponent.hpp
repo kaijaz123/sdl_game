@@ -9,6 +9,8 @@ class SpriteComponent : public Component
 {
 public:
     TransformComponent *transform;
+    SDL_Texture* tex;
+    SDL_Rect src, dest;
 
     SpriteComponent() = default;
     ~SpriteComponent() {};
@@ -27,20 +29,19 @@ public:
     {
         transform = &entity->getComponent<TransformComponent>();
 
-        src.x = transform->texPos_x;
-        src.y = transform->texPos_y;
-        src.w = src.h = transform->size;
+        src.x = transform->texPos_x * transform->width;
+        src.y = transform->texPos_y * transform->height;
+        src.w = transform->width;
+        src.h = transform->height;
     }
 
     void update() override
     {
         dest.x = transform->position_x - Game::camera.x;
         dest.y = transform->position_y - Game::camera.y;
-        dest.w = (transform->size * transform->scale);
-        dest.h = (transform->size * transform->scale);
+        dest.w = (transform->width * transform->scale);
+        dest.h = (transform->height * transform->scale);
     }
 
 private:
-    SDL_Texture* tex;
-    SDL_Rect src, dest;
 };
