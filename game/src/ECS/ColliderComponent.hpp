@@ -3,7 +3,7 @@
 #include "ECS.hpp"
 #include "TransformComponent.hpp"
 #include "TileComponent.hpp"
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include "../Game.hpp"
 
 class ColliderComponent : public Component
@@ -31,13 +31,17 @@ public:
 
     void update() override
     {
+        transform = &entity->getComponent<TransformComponent>();
+        tile = &entity->getComponent<TileComponent>();
+        
         if (object)
             { collider.x = tile->position_x;
               collider.y = tile->position_y; 
               collider.w = tile->dest.w;
               collider.h = tile->dest.h; }
         else
-            { collider.x = transform->position_x;
+            { 
+              collider.x = transform->position_x;
               collider.y = transform->position_y; 
               collider.w = transform->width * transform->scale;
               collider.h = transform->height * transform->scale;}
@@ -45,7 +49,5 @@ public:
 
     void init() override
     {
-        transform = &entity->getComponent<TransformComponent>();
-        tile = &entity->getComponent<TileComponent>();
     }
 };

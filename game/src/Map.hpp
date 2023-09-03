@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <cctype>
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 class Map
 {

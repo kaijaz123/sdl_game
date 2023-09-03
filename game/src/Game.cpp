@@ -76,24 +76,38 @@ auto& objects(manager.getGroup(Game::groupMapObject));
 
 void Game::update()
 {
-    SDL_Rect playerPol;
-    playerPol = player.getComponent<ColliderComponent>().collider;
+
+    SDL_Rect playerPol, playerCol;
+    std::tuple<bool, bool, bool> colCheck;
+    playerPol.x = player.getComponent<TransformComponent>().position_x;
+    playerPol.y = player.getComponent<TransformComponent>().position_y;
+    playerCol = player.getComponent<ColliderComponent>().collider;
 
     manager.refresh();
     manager.update();
 
-
+    // Collision check
     for (auto object : objects)
     {
-        if (collider.Collide(playerPol, 
-                             object->getComponent<ColliderComponent>().collider))
+        colCheck = collider.Collide(playerCol,
+                                    object->getComponent<ColliderComponent>().collider);
+
+        if (std::get<0>(colCheck))
         {
-            std::cout << "Hit!!" << std::endl;
-            player.getComponent<TransformComponent>().position_x = playerPol.x;
-            player.getComponent<TransformComponent>().position_y = playerPol.y;
+            // if (std::get<1>(colCheck))
+            // {
+            //     std::cout << "Hit in x axis!!" << std::endl;
+            //     player.getComponent<TransformComponent>().position_x = playerPol.x;                 
+            // } 
+            // else
+            // {  
+            //     std::cout << "Hit in y axis!!" << std::endl; 
+            //     player.getComponent<TransformComponent>().position_y = playerPol.y; 
+            // }
+            player.getComponent<TransformComponent>().position_x = playerPol.x; 
+            player.getComponent<TransformComponent>().position_y = playerPol.y; 
         }
     }
-
     
     camera.x = player.getComponent<TransformComponent>().position_x - 400;
     camera.y = player.getComponent<TransformComponent>().position_y - 320;

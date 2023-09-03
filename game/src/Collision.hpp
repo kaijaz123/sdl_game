@@ -1,24 +1,42 @@
 #pragma once
 
 #include <iostream>
-#include <SDL2/SDL.h>
+#include <SDL.h>
+#include <tuple>
 
 class Collision
 {
 public:
+    bool yCollision = false, xCollision = false;
+    bool collide = false;
+
     Collision() = default;
     ~Collision() {};
 
-    bool Collide(SDL_Rect obj_A, SDL_Rect obj_B)
+    void CollideXY(SDL_Rect obj_A, SDL_Rect obj_B)
     {
-        std::cout << "Player xo: " << obj_A.x << std::endl;
-        std::cout << "Player yo: " << obj_A.y << std::endl;
-        std::cout << "Object xo: " << obj_B.x << std::endl;
-        std::cout << "Object yo: " << obj_B.y << std::endl;
-        std::cout << "Player x: " << obj_A.x + obj_A.w << std::endl;
-        std::cout << "Player y: " << obj_A.y + obj_A.h << std::endl;
-        std::cout << "Object x: " << obj_B.x + obj_B.w<< std::endl;
-        std::cout << "Object y: " << obj_B.y + obj_B.h << std::endl;
+        if 
+        (
+            obj_A.y + obj_A.h >= obj_B.y ||
+            obj_A.y >= obj_B.y        
+        )
+        { 
+            xCollision = false;
+            yCollision = true;
+        }
+        else
+        {
+            xCollision = true;
+            yCollision = false;
+        }
+    }
+
+    std::tuple<bool, bool, bool> Collide(SDL_Rect obj_A, SDL_Rect obj_B)
+    {
+        collide = false;
+        xCollision = false;
+        yCollision = false;
+
         if
         (
             obj_A.x + obj_A.w >= obj_B.x &&
@@ -26,7 +44,10 @@ public:
             obj_A.y + obj_A.h >= obj_B.y &&
             obj_B.y + obj_B.h >= obj_A.y
         )
-        { return true; }
-        return false;
+        {
+            collide = true;
+            CollideXY(obj_A, obj_B);
+        }
+        return std::make_tuple(collide, xCollision, yCollision);
     }
 };
