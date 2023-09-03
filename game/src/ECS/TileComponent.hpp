@@ -3,7 +3,6 @@
 #include "ECS.hpp"
 #include "../Game.hpp"
 #include <SDL2/SDL.h>
-#include "ToolComponent.hpp"
 #include "../TextureManager.hpp"
 
 class TileComponent : public Component

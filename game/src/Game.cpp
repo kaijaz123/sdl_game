@@ -1,10 +1,8 @@
 #include "Game.hpp"
 #include "Map.hpp"
 #include "Collision.hpp"
-#include "ECS/ECS.hpp"
-#include "ECS/SpriteComponent.hpp"
 #include "ECS/TransformComponent.hpp"
-#include "ECS/ToolComponent.hpp"
+#include "ECS/ItemComponent.hpp"
 #include "ECS/InputController.hpp"
 #include "ECS/ColliderComponent.hpp"
 
@@ -56,8 +54,8 @@ void Game::init(const char* title, int width, int height, bool fullscreen)
     player.addComponent<SpriteComponent>("game/assets/Characters/CharSheet_modified.png", 
                                          "game/assets/Characters/Character_action.png", true, 100);
     player.addComponent<ColliderComponent>(48, 48);
+    player.addComponent<ItemComponent>("game/assets/Objects/Items/tools and meterials.png", "game/assets/Font/UniversCondensed.ttf");
     player.addComponent<InputController>();
-    player.addComponent<ToolComponent>();
     player.addGroup(Game::groupPlayer);
 }
 

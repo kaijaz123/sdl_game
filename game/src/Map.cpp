@@ -1,8 +1,8 @@
 #include "Map.hpp"
 #include "Game.hpp"
 #include "TextureManager.hpp"
-#include "ECS/ECS.hpp"
 #include "ECS/TileComponent.hpp"
+#include "ECS/TransformComponent.hpp"
 #include "ECS/ColliderComponent.hpp"
 
 extern Manager manager;

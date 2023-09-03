@@ -1,11 +1,10 @@
 #pragma once
 
+#include "TransformComponent.hpp"
+#include "ItemComponent.hpp"
+#include "SpriteComponent.hpp"
 #include <SDL2/SDL.h>
 #include <iostream>
-#include "ECS.hpp"
-#include "ToolComponent.hpp"
-#include "TransformComponent.hpp"
-#include "SpriteComponent.hpp"
 #include "../Game.hpp"
 
 class InputController : public Component
@@ -13,18 +12,14 @@ class InputController : public Component
 public:
     TransformComponent *transform;
     SpriteComponent *sprite;
-    ToolComponent *tool;
+    ItemComponent *item;
 
     InputController() = default;
     ~InputController() {}
 
     void init() override
     {
-        tool = &entity->getComponent<ToolComponent>();
-        if (tool)
-        {
-            std::cout<< "Yes" << std::endl;
-        }
+        item = &entity->getComponent<ItemComponent>();
         transform = &entity->getComponent<TransformComponent>();
         sprite = &entity->getComponent<SpriteComponent>();
     }
@@ -54,14 +49,12 @@ public:
             else if (Game::event.key.keysym.sym == SDLK_1)
                 { sprite->action.onHold = true;
                   sprite->action.name = "Hoe";
-                  std::cout << "Hello1" << std::endl;
-                  tool->UpdateText("[Hoe] Equipped");
-                  std::cout << "Hello2" << std::endl;}
+                  item->UpdateText("[Hoe] Equipped");}
             
             else if (Game::event.key.keysym.sym == SDLK_2)
                 { sprite->action.onHold = true;
                   sprite->action.name = "Axe";
-                  tool->text = "[Axe] Equipped"; }
+                  item->text = "[Axe] Equipped"; }
         }
 
         if (Game::event.type == SDL_KEYUP)
@@ -86,7 +79,7 @@ public:
                   sprite->action.name = "";
                   sprite->move = 0;
                   sprite->Play("Idle"); 
-                  tool->text = "Unequipped"; }        
+                  item->text = "Unequipped"; }        
             
             sprite->y_index = 0;       
         }
