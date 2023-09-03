@@ -1,7 +1,7 @@
 #include <iostream>
 #include "Game.hpp"
 
-int main()
+int WinMain()
 {
     const int FPS = 60;
     const int frameDelay = 1000 / FPS;

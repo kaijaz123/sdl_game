@@ -69,5 +69,6 @@
         "typeinfo": "cpp",
         "variant": "cpp"
     },
-    "cmake.configureOnOpen": false
+    "cmake.configureOnOpen": false,
+    "cmake.sourceDirectory": "C:/Users/ongka/github/sdl_game/game/vendor/SDL2/test"
 }

@@ -56,7 +56,10 @@ bin-int/x86_64/Debug/Game.o: game/src/Game.cpp game/src/Game.hpp \
  game/src/Map.hpp game/src/Collision.hpp game/src/ECS/ECS.hpp \
  game/src/ECS/SpriteComponent.hpp game/src/ECS/../TextureManager.hpp \
  game/src/ECS/TransformComponent.hpp game/src/ECS/TileComponent.hpp \
- game/src/ECS/InputController.hpp game/src/ECS/ColliderComponent.hpp
+ game/src/ECS/ToolComponent.hpp \
+ game/vendor/SDL2_ttf/x86_64-w64-mingw32/include/SDL2/SDL_ttf.h \
+ game/src/ECS/Animation.hpp game/src/ECS/InputController.hpp \
+ game/src/ECS/ColliderComponent.hpp
 game/src/Game.hpp:
 game/vendor/SDL2/x86_64-w64-mingw32/include/SDL2/SDL.h:
 game/vendor/SDL2/x86_64-w64-mingw32/include/SDL2/SDL_main.h:
@@ -119,5 +122,8 @@ game/src/ECS/SpriteComponent.hpp:
 game/src/ECS/../TextureManager.hpp:
 game/src/ECS/TransformComponent.hpp:
 game/src/ECS/TileComponent.hpp:
+game/src/ECS/ToolComponent.hpp:
+game/vendor/SDL2_ttf/x86_64-w64-mingw32/include/SDL2/SDL_ttf.h:
+game/src/ECS/Animation.hpp:
 game/src/ECS/InputController.hpp:
 game/src/ECS/ColliderComponent.hpp:

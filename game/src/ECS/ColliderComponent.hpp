@@ -3,7 +3,7 @@
 #include "ECS.hpp"
 #include "TransformComponent.hpp"
 #include "TileComponent.hpp"
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include "../Game.hpp"
 
 class ColliderComponent : public Component

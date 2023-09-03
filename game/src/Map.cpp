@@ -16,6 +16,10 @@ Map::Map(int mS) : mapScale(mS)
     house = TextureManager::LoadTexture("game/assets/Tilesets/building_parts/WoodenHouse.png");
     door = TextureManager::LoadTexture("game/assets/Tilesets/building_parts/Door.png");
     tree = TextureManager::LoadTexture("game/assets/Objects/Tree/tree_sprites.png");
+    dirt = TextureManager::LoadTexture("game/assets/Tilesets/ground_tiles/Old_tiles/Tilled Dirt.png");
+    farmPlant = TextureManager::LoadTexture("game/assets/Objects/Farming Plants.png");
+    wood = TextureManager::LoadTexture("game/assets/Objects/Trees, stumps and bushes.png");
+    mfs = TextureManager::LoadTexture("game/assets/Objects/Mushrooms, Flowers, Stones.png");
 
     // Load Layer 0 -> All Water
     for (int y=0; y<mapSizeY; y++)
@@ -77,6 +81,22 @@ void Map::checkTile(Map::RenderStructure tileSet, int x, int y)
 
         case 'T':
             addTile(tree, tileSet.texPos_x, tileSet.texPos_y, x, y, 16, 16, true, true);
+            break;
+        
+        case 'I':
+            addTile(dirt, tileSet.texPos_x, tileSet.texPos_y, x, y, 16, 16, true, false);
+            break;
+        
+        case 'P':
+            addTile(farmPlant, tileSet.texPos_x, tileSet.texPos_y, x, y, 16, 16);
+            break;
+        
+        case 'B':
+            addTile(wood, tileSet.texPos_x, tileSet.texPos_y, x, y, 16, 16);
+            break;
+        
+        case 'M':
+            addTile(mfs, tileSet.texPos_x, tileSet.texPos_y, x, y, 16, 16);
             break;
         
         default:

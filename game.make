@@ -22,11 +22,11 @@ RESCOMP = windres
 TARGETDIR = bin/x86_64
 TARGET = $(TARGETDIR)/game.exe
 DEFINES +=
-INCLUDES += -Igame/vendor/SDL2/x86_64-w64-mingw32/include -Igame/vendor/SDL2_image/x86_64-w64-mingw32/include
+INCLUDES += -Igame/vendor/SDL2/x86_64-w64-mingw32/include -Igame/vendor/SDL2_image/x86_64-w64-mingw32/include -Igame/vendor/SDL2_ttf/x86_64-w64-mingw32/include
 FORCE_INCLUDE +=
 ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
 ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-LIBS += -lSDL2 -lSDL2_image
+LIBS += -lSDL2 -lSDL2_image -lSDL2_ttf
 LDDEPS +=
 LINKCMD = $(CXX) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
 define PREBUILDCMDS
@@ -37,19 +37,20 @@ define POSTBUILDCMDS
 	@echo Running postbuild commands
 	cp 'game/vendor/SDL2/x86_64-w64-mingw32/bin/SDL2.dll' 'bin/x86_64/'
 	cp 'game/vendor/SDL2_image/x86_64-w64-mingw32/bin/SDL2_image.dll' 'bin/x86_64/'
+	cp 'game/vendor/SDL2_ttf/x86_64-w64-mingw32/bin/SDL2_ttf.dll' 'bin/x86_64/'
 endef
 
 ifeq ($(config),debug)
 OBJDIR = bin-int/x86_64/Debug
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -g
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -g -std=c++17
-ALL_LDFLAGS += $(LDFLAGS) -Lgame/vendor/SDL2/x86_64-w64-mingw32/lib -Lgame/vendor/SDL2_image/x86_64-w64-mingw32/lib -L/usr/lib64 -m64
+ALL_LDFLAGS += $(LDFLAGS) -Lgame/vendor/SDL2/x86_64-w64-mingw32/lib -Lgame/vendor/SDL2_image/x86_64-w64-mingw32/lib -Lgame/vendor/SDL2_ttf/x86_64-w64-mingw32/lib -L/usr/lib64 -m64
 
 else ifeq ($(config),release)
 OBJDIR = bin-int/x86_64/Release
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -std=c++17
-ALL_LDFLAGS += $(LDFLAGS) -Lgame/vendor/SDL2/x86_64-w64-mingw32/lib -Lgame/vendor/SDL2_image/x86_64-w64-mingw32/lib -L/usr/lib64 -m64 -s
+ALL_LDFLAGS += $(LDFLAGS) -Lgame/vendor/SDL2/x86_64-w64-mingw32/lib -Lgame/vendor/SDL2_image/x86_64-w64-mingw32/lib -Lgame/vendor/SDL2_ttf/x86_64-w64-mingw32/lib -L/usr/lib64 -m64 -s
 
 else
   $(error "invalid configuration $(config)")

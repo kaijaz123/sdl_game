@@ -4,6 +4,7 @@
 #include "ECS/ECS.hpp"
 #include "ECS/SpriteComponent.hpp"
 #include "ECS/TransformComponent.hpp"
+#include "ECS/ToolComponent.hpp"
 #include "ECS/InputController.hpp"
 #include "ECS/ColliderComponent.hpp"
 
@@ -36,24 +37,27 @@ void Game::init(const char* title, int width, int height, bool fullscreen)
     if (SDL_Init(SDL_INIT_EVERYTHING) == 0)
     {
         window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, flags);
-        renderer = SDL_CreateRenderer(window, -1, 0);
-        if (renderer)
-        {
-            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-        }
+        renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
         isRunning = true;
     }
+
+	if (TTF_Init() == -1)
+	{
+		std::cout << "Error : SDL_TTF" << std::endl;
+	}
 
     // Render the map
     map = new Map(3);
     map->DrawMap("game/assets/Map/layer1.map");
     map->DrawMap("game/assets/Map/layer2.map");
 
-    // player.addComponent<TransformComponent>(0, 0, 400, 320, 48, 3, 1, -90, -70);
-    player.addComponent<TransformComponent>(1, 1, 800, 640, 16, 16, 3, 3);
-    player.addComponent<SpriteComponent>("game/assets/Characters/CharSheet.png");
+    player.addComponent<TransformComponent>(0, 0, 800, 640, 16, 16, 3, 3);
+    player.addComponent<SpriteComponent>("game/assets/Characters/CharSheet_modified.png", 
+                                         "game/assets/Characters/Character_action.png", true, 100);
     player.addComponent<ColliderComponent>(48, 48);
     player.addComponent<InputController>();
+    player.addComponent<ToolComponent>();
     player.addGroup(Game::groupPlayer);
 }
 
@@ -94,16 +98,6 @@ void Game::update()
 
         if (std::get<0>(colCheck))
         {
-            // if (std::get<1>(colCheck))
-            // {
-            //     std::cout << "Hit in x axis!!" << std::endl;
-            //     player.getComponent<TransformComponent>().position_x = playerPol.x;                 
-            // } 
-            // else
-            // {  
-            //     std::cout << "Hit in y axis!!" << std::endl; 
-            //     player.getComponent<TransformComponent>().position_y = playerPol.y; 
-            // }
             player.getComponent<TransformComponent>().position_x = playerPol.x; 
             player.getComponent<TransformComponent>().position_y = playerPol.y; 
         }
@@ -125,11 +119,6 @@ void Game::update()
 void Game::render()
 {
     SDL_RenderClear(renderer);
-
-    // for (auto& t : tiles)
-    // {
-    //     t->draw();
-    // }
 
     for (auto& g : grounds)
     {

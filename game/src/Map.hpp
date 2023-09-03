@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <cctype>
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 class Map
 {
@@ -39,4 +39,8 @@ private:
     SDL_Texture* house;
     SDL_Texture* door;
     SDL_Texture* tree;
+    SDL_Texture* dirt;
+    SDL_Texture* farmPlant;
+    SDL_Texture* wood;
+    SDL_Texture* mfs;
 };

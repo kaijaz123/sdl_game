@@ -26,6 +26,7 @@ project "game"
     {
         "game/vendor/SDL2/x86_64-w64-mingw32/include",
         "game/vendor/SDL2_image/x86_64-w64-mingw32/include",
+        "game/vendor/SDL2_ttf/x86_64-w64-mingw32/include"
         -- "gui/vendor/spdlog/include"
     }
 
@@ -33,7 +34,8 @@ project "game"
     -- note: its equal to -L
     {
         "game/vendor/SDL2/x86_64-w64-mingw32/lib",
-        "game/vendor/SDL2_image/x86_64-w64-mingw32/lib"
+        "game/vendor/SDL2_image/x86_64-w64-mingw32/lib",
+        "game/vendor/SDL2_ttf/x86_64-w64-mingw32/lib"
     }
 
     -- Note: this one is used on macbook but not windows, not sure why yet
@@ -51,12 +53,14 @@ project "game"
     {
         "SDL2",
         "SDL2_image",
+        "SDL2_ttf"
     }
 
     postbuildcommands
     {
         "cp 'game/vendor/SDL2/x86_64-w64-mingw32/bin/SDL2.dll' 'bin/x86_64/'",
         "cp 'game/vendor/SDL2_image/x86_64-w64-mingw32/bin/SDL2_image.dll' 'bin/x86_64/'",
+        "cp 'game/vendor/SDL2_ttf/x86_64-w64-mingw32/bin/SDL2_ttf.dll' 'bin/x86_64/'",
     }
 
     filter "configurations:Debug"
