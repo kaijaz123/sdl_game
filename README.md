@@ -15,6 +15,6 @@ if it proves helpful.
 ## Assets used in this game
 Website: https://cupnooble.itch.io/sprout-lands-asset-pack
 
-Game
+## Game
 ![image](https://github.com/kaijaz123/sdl_game/assets/49195906/7610657b-6992-468a-bb2f-3699461dbbfb)
 
