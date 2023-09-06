@@ -12,11 +12,15 @@ if it proves helpful.
 - SDL2_image
 - SDL2_ttf
 - spdlog (optional)
-- premake5
+- premake5 (edit the premake file to your settings)
 
 ## Assets used in this game
 Website: https://cupnooble.itch.io/sprout-lands-asset-pack
 
 ## Game
 ![image](https://github.com/kaijaz123/sdl_game/assets/49195906/7610657b-6992-468a-bb2f-3699461dbbfb)
+### Basic control
+- WASD (Key) to move character
+- Number key to put on equipment (1,2...)
+- Escape key to unequip
 
