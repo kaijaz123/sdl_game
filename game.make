@@ -67,6 +67,7 @@ OBJECTS :=
 
 OBJECTS += $(OBJDIR)/ECS.o
 OBJECTS += $(OBJDIR)/Game.o
+OBJECTS += $(OBJDIR)/ItemComponent.o
 OBJECTS += $(OBJDIR)/Map.o
 OBJECTS += $(OBJDIR)/TextureManager.o
 OBJECTS += $(OBJDIR)/main.o
@@ -132,6 +133,9 @@ endif
 # #############################################
 
 $(OBJDIR)/ECS.o: game/src/ECS/ECS.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ItemComponent.o: game/src/ECS/ItemComponent.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/Game.o: game/src/Game.cpp

@@ -66,17 +66,20 @@ void Map::checkTile(Map::RenderStructure tileSet, int x, int y)
     {
         case 'S':
             break;
+        
+        case 'C':
+            addTile(water, tileSet.texPos_x, tileSet.texPos_x, x, y, 16, 16, false, true);
 
         case 'G':
             addTile(grass, tileSet.texPos_x, tileSet.texPos_y, x, y, 16, 16);
             break;
         
         case 'D':
-            addTile(door, tileSet.texPos_x, tileSet.texPos_y, x, y, 16, 16);
+            addTile(door, tileSet.texPos_x, tileSet.texPos_y, x, y, 16, 16, false, true);
             break;
         
         case 'H':
-            addTile(house, tileSet.texPos_x, tileSet.texPos_y, x, y, 16, 16, true);
+            addTile(house, tileSet.texPos_x, tileSet.texPos_y, x, y, 16, 16, true, true);
             break;
 
         case 'T':

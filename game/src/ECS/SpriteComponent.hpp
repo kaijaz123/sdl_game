@@ -62,15 +62,16 @@ public:
     {
         if (animated)
         {
+            // Render info
+            tex = AniMap[current_move].tex;
+            src.w = AniMap[current_move].width;
+            src.h = transform->height = AniMap[current_move].height;
+            speed = AniMap[current_move].speed;
+            frames = AniMap[current_move].frames;
+
             if (current_move == "Idle")
             {
                 // Render idle and udlr move
-                tex = AniMap[current_move].tex;
-                src.w = AniMap[current_move].width;
-                src.h = transform->height = AniMap[current_move].height;
-                speed = AniMap[current_move].speed;
-                frames = AniMap[current_move].frames;
-
                 i_index = static_cast<int>(((SDL_GetTicks() / speed) % frames));
                 pos = i_index + (i_index * 2);
                 src.x = src.w * pos;
@@ -82,12 +83,6 @@ public:
             else if (action.onHold == true && current_move == "Action")
             { 
                 // Render basic action move
-                tex = AniMap[current_move].tex;
-                src.w = AniMap[current_move].width;
-                src.h = transform->height = AniMap[current_move].height;
-                speed = AniMap[current_move].speed;
-                frames = AniMap[current_move].frames;
-                
                 i_index = static_cast<int>(((SDL_GetTicks() / speed) % frames));
                 pos = i_index + (i_index * 2) + 1;
                 src.x = src.w * pos;

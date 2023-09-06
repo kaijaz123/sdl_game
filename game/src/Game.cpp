@@ -47,6 +47,7 @@ void Game::init(const char* title, int width, int height, bool fullscreen)
 
     // Render the map
     map = new Map(3);
+    map->DrawMap("game/assets/Map/col.map");
     map->DrawMap("game/assets/Map/layer1.map");
     map->DrawMap("game/assets/Map/layer2.map");
 
@@ -80,24 +81,23 @@ void Game::update()
 {
 
     SDL_Rect playerPol, playerCol;
-    std::tuple<bool, bool, bool> colCheck;
     playerPol.x = player.getComponent<TransformComponent>().position_x;
     playerPol.y = player.getComponent<TransformComponent>().position_y;
-    playerCol = player.getComponent<ColliderComponent>().collider;
-
+    
     manager.refresh();
     manager.update();
-
+    
     // Collision check
     for (auto object : objects)
     {
-        colCheck = collider.Collide(playerCol,
+        SDL_Rect PlayerCur = player.getComponent<ColliderComponent>().collider;
+        bool col = collider.Collide(PlayerCur,
                                     object->getComponent<ColliderComponent>().collider);
 
-        if (std::get<0>(colCheck))
+        if (col)
         {
             player.getComponent<TransformComponent>().position_x = playerPol.x; 
-            player.getComponent<TransformComponent>().position_y = playerPol.y; 
+            player.getComponent<TransformComponent>().position_y = playerPol.y;
         }
     }
     

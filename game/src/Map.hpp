@@ -43,4 +43,5 @@ private:
     SDL_Texture* farmPlant;
     SDL_Texture* wood;
     SDL_Texture* mfs;
+    SDL_Texture* blankTex;
 };
