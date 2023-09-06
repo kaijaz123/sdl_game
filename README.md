@@ -3,7 +3,7 @@
 ## Description
 It is just a simple small game I made by using SDL(Simple DirectMedia Layer) in c++ and it serves
 as just a demo game. It just include some basic game functions like character movement, animations,
-simple equipments system, etc.
+simple equipments system, AABB collision, ECS, and etc.
 Anyway feel free to give it a try, and it would be greatly appreciated 
 if it proves helpful.
 
